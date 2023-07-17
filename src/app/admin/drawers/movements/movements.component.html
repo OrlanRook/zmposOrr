@@ -1,0 +1,53 @@
+<div class="card-body">
+  <div class="row">
+    <div class="col-lg-6 col-xl-6">
+      <div class="input-group position-relative mb-3">
+        <label class="input-group-text" for="inputClient" style="width:120px; display:block;">Surcursal</label>
+        <select class="form-select" id="inputClient" [(ngModel)]="currentBranch" (ngModelChange)="onChangeBranch($event)" >
+          <option *ngFor="let branch of branches" [ngValue]="branch">{{branch.name}}</option>
+        </select>
+      </div>
+      <div class="input-group position-relative mb-4">
+        <label class="input-group-text" for="inputClient" style="width:120px; display:block;">Caja</label>
+        <select class="form-select" id="inputClient" [(ngModel)]="currentDrawer" (ngModelChange)="onChangeDrawer($event)" >
+          <option *ngFor="let drawer of drawers" [ngValue]="drawer">{{drawer.name}}</option>
+        </select>
+      </div>
+      <div class="input-group position-relative mb-4">
+        <label class="input-group-text" for="dateMonthValue" style="width:120px; display:block;">Mes</label>
+        <input type="month" class="form-control" id="dateMonthValue" (change)="OnChangeDate($event)" [(ngModel)]="dateMonth">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-9 col-xl-9">
+      <div class="table-responsive mt-4">
+        <table class="table mb-0 table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Operación</th>
+              <th scope="col">Fecha</th>
+              <th scope="col" style="text-align:right">Total</th>
+              <th scope="col" style="text-align:right">Desviación</th>
+              <th scope="col">Notas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of drawerOps">
+              <div>
+                <div *ngIf="item.operation=='OP'" class="badge rounded-pill bg-success w-100">Apertura</div>
+                <div *ngIf="item.operation=='CL' && item.deviation_amt>=0" class="badge rounded-pill bg-secondary w-100">Término</div>
+                <div *ngIf="item.operation=='CL' && item.deviation_amt<0" class="badge rounded-pill bg-danger w-100">Término</div>
+              </div>
+              <td>{{ item.created_date | date:'dd/MM/yyyy h:mm a' }}</td>
+              <td style="text-align:right">{{ item.total | currency }}</td>
+              <td style="text-align:right">{{ item.deviation_amt | currency }}</td>
+              <td>{{ item.notes }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+

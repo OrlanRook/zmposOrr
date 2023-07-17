@@ -1,0 +1,393 @@
+<!-- Weekly Ventas -->
+<div class="row row-cols-1 row-cols-lg-2 row-cols-xl-4">
+  <div class="col">
+    <div class="card radius-10">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <p class="mb-0 text-secondary">Ventas semanales</p>
+            <h4 class="my-1">{{ weeklySales | currency }}</h4>
+            <p class="mb-0 font-13 text-success"><i class='bx bxs-up-arrow align-middle'></i>{{ weeklySalesCnt }} ventas concretadas</p>
+          </div>
+          <div class="widgets-icons bg-light-success text-success ms-auto"><i class='bx bx-money'></i>
+          </div>
+        </div>
+        <div>
+          <apx-chart
+            [series]="chartOptWeeklySales.series"
+            [chart]="chartOptWeeklySales.chart"
+            [markers]="chartOptWeeklySales.markers"
+            [dataLabels]="chartOptWeeklySales.dataLabels"
+            [stroke]="chartOptWeeklySales.stroke"
+            [colors]="chartOptWeeklySales.colors"
+            [xaxis]="chartOptWeeklySales.xaxis"
+            [fill]="chartOptWeeklySales.fill"
+            [tooltip]="chartOptWeeklySales.tooltip">
+          </apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card radius-10">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <p class="mb-0 text-secondary">Devoluciones semanales</p>
+            <h4 class="my-1">{{ weeklyReturns | currency }}</h4>
+            <p class="mb-0 font-13 text-danger"><i class='bx bxs-up-arrow align-middle'></i>{{ weeklyReturnsCnt }} devoluciones</p>
+          </div>
+          <div class="widgets-icons bg-light-danger text-danger ms-auto"><i class='bx bx-transfer'></i>
+          </div>
+        </div>
+        <apx-chart
+            [series]="chartOptWeeklyReturns.series"
+            [chart]="chartOptWeeklyReturns.chart"
+            [markers]="chartOptWeeklyReturns.markers"
+            [dataLabels]="chartOptWeeklyReturns.dataLabels"
+            [stroke]="chartOptWeeklyReturns.stroke"
+            [colors]="chartOptWeeklyReturns.colors"
+            [xaxis]="chartOptWeeklyReturns.xaxis"
+            [fill]="chartOptWeeklyReturns.fill"
+            [tooltip]="chartOptWeeklyReturns.tooltip">
+          </apx-chart>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card radius-10">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <p class="mb-0 text-secondary">Ordenes semanales</p>
+            <h4 class="my-1">{{ weeklyOrders | currency }}</h4>
+            <p class="mb-0 font-13 text-warning"><i class='bx bxs-up-arrow align-middle'></i>{{ weeklyOrdersCnt }} órdenes generadas</p>
+          </div>
+          <div class="widgets-icons bg-light-warning text-warning ms-auto"><i class='bx bx-cart'></i>
+          </div>
+        </div>
+        <apx-chart
+            [series]="chartOptWeeklyOrders.series"
+            [chart]="chartOptWeeklyOrders.chart"
+            [markers]="chartOptWeeklyOrders.markers"
+            [dataLabels]="chartOptWeeklyOrders.dataLabels"
+            [stroke]="chartOptWeeklyOrders.stroke"
+            [colors]="chartOptWeeklyOrders.colors"
+            [xaxis]="chartOptWeeklyOrders.xaxis"
+            [fill]="chartOptWeeklyOrders.fill"
+            [tooltip]="chartOptWeeklyOrders.tooltip">
+          </apx-chart>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card radius-10">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <p class="mb-0 text-secondary">Taller semanales</p>
+            <h4 class="my-1">{{ weeklyRepairs | currency }}</h4>
+            <p class="mb-0 font-13 text-primary"><i class='bx bxs-up-arrow align-middle'></i>{{ weeklyRepairsCnt }} dispositivos reparados</p>
+          </div>
+          <div class="widgets-icons bg-light-primary text-primary ms-auto"><i class='lni lni-compass'></i>
+          </div>
+        </div>
+        <apx-chart
+            [series]="chartOptWeeklyRepairs.series"
+            [chart]="chartOptWeeklyRepairs.chart"
+            [markers]="chartOptWeeklyRepairs.markers"
+            [dataLabels]="chartOptWeeklyRepairs.dataLabels"
+            [stroke]="chartOptWeeklyRepairs.stroke"
+            [colors]="chartOptWeeklyRepairs.colors"
+            [xaxis]="chartOptWeeklyRepairs.xaxis"
+            [fill]="chartOptWeeklyRepairs.fill"
+            [tooltip]="chartOptWeeklyRepairs.tooltip">
+          </apx-chart>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Weekly Ventas -->
+
+<!-- Yearly Ventas / summary -->
+<div class="row row-cols-1">
+  <div class="col-xl-8 d-flex">
+    <div class="card radius-10 w-100">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <h5 class="mb-1">Ventas anuales</h5>
+            <p class="mb-0 font-13 text-secondary"><i class='bx bxs-calendar'></i>{{ yearlyTitle }}</p>
+          </div>
+          <div class="font-22 ms-auto"><i class='bx bx-dots-horizontal-rounded'></i>
+          </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-3 mt-4">
+          <div class="col">
+            <div>
+              <p class="mb-0 text-secondary">Ingresos</p>
+              <h4 class="my-1">{{ yearlyYear | currency }}</h4>
+              <p class="mb-0 font-13 {{ yearlyIncomeColor }}"><i class='{{ yearlyIncomeIcon }} align-middle'></i>{{ yearlyIncome | currency }} Desde el último mes</p>
+            </div>
+          </div>
+          <div class="col">
+            <div>
+              <p class="mb-0 text-secondary">Ingreso/Clientes</p>
+              <h4 class="my-1">{{ yearlyClient | currency }}</h4>
+              <p class="mb-0 font-13 {{ yearlyIncomeClientColor }}"><i class='{{ yearlyIncomeClientIcon }} align-middle'></i>{{ yearlyIncomeClient | currency }} Desde el último mes</p>
+            </div>
+          </div>
+          <div class="col">
+            <div>
+              <p class="mb-0 text-secondary">Ingreso/Visitantes</p>
+              <h4 class="my-1">{{ yearlyPublic | currency }}</h4>
+              <p class="mb-0 font-13 {{ yearlyIncomePublicColor }}"><i class='{{ yearlyIncomePublicIcon }} align-middle'></i>{{ yearlyIncomePublic | currency }} Desde el último mes</p>
+            </div>
+          </div>
+        </div>
+        <apx-chart
+            [series]="chartOptYearlySales.series"
+            [chart]="chartOptYearlySales.chart"
+            [markers]="chartOptYearlySales.markers"
+            [dataLabels]="chartOptYearlySales.dataLabels"
+            [stroke]="chartOptYearlySales.stroke"
+            [colors]="chartOptYearlySales.colors"
+            [xaxis]="chartOptYearlySales.xaxis"
+            [fill]="chartOptYearlySales.fill"
+            [tooltip]="chartOptYearlySales.tooltip">
+          </apx-chart>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-4 d-flex">
+    <div class="card radius-10 w-100">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <h5 class="mb-1">Resumen de ventas</h5>
+            <p class="mb-0 font-13 text-secondary"><i class='bx bxs-calendar'></i>{{ monthName }}</p>
+          </div>
+          <div class="font-22 ms-auto"><i class='bx bx-dots-horizontal-rounded'></i>
+          </div>
+        </div>
+      </div>
+      <div class="row row-cols-1">
+        <div class="col">
+          <div class="card radius-10 overflow-hidden">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div>
+                  <p class="mb-0">Ventas esta semana</p>
+                </div>
+                <div class="ms-auto">
+                  <h5 class="mb-0">{{ monthlySalesWThis | currency }}</h5>
+                </div>
+              </div>
+              <div class="progress radius-10 mt-4 h-5">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ monthlySalesWGoal1 }}%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card radius-10 overflow-hidden">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div>
+                  <p class="mb-0">Ventas semana anterior</p>
+
+                </div>
+                <div class="ms-auto">
+                  <h5 class="mb-0">{{ monthlySalesWPrev | currency }}</h5>
+                </div>
+              </div>
+              <div class="progress radius-10 mt-4 h-5">
+                <div class="progress-bar bg-light-success2" role="progressbar" style="width: {{ monthlySalesWGoal2 }}%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card radius-10 overflow-hidden">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div>
+                  <p class="mb-0">Ventas este mes</p>
+                </div>
+                <div class="ms-auto">
+                  <h5 class="mb-0">{{ monthlySalesThis | currency }}</h5>
+                </div>
+              </div>
+              <div class="progress radius-10 mt-4 h-5">
+                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ monthlySalesGoal1 }}%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card radius-10 overflow-hidden">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div>
+                  <p class="mb-0">Ventas mes anterior</p>
+                </div>
+                <div class="ms-auto">
+                  <h5 class="mb-0">{{ monthylSalesPrev | currency }}</h5>
+                </div>
+              </div>
+              <div class="progress radius-10 mt-4 h-5">
+                <div class="progress-bar bg-light-warning2" role="progressbar" style="width: {{ monthlySalesGoal2 }}%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Yearly Ventas / summary -->
+
+<!-- Top 10 -->
+<div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
+  <div class="col d-flex">
+    <div class="card radius-10 w-100">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <h5 class="mb-0">Clientes nuevos</h5>
+          </div>
+        </div>
+      </div>
+      <div class="customers-list p-3 mb-3" [perfectScrollbar]>
+        <div *ngFor="let data of users">
+          <div class="customers-list-item d-flex align-items-center border-top border-bottom p-2 cursor-pointer">
+            <div class="">
+              <img src="{{ data.image_url }}" class="rounded-circle" width="38" height="38" alt="" />
+            </div>
+            <div class="ms-2">
+              <h6 class="mb-1 font-14">{{ data.name }}</h6>
+              <p class="mb-0 font-13 text-secondary">{{ data.state }}</p>
+            </div>
+            <div class="list-inline d-flex customers-contacts ms-auto">
+              <a href="details" 
+                 data-bs-toggle="modal" 
+                 data-bs-target="#modalClientDetails"
+                 (click)="$event.preventDefault(); clientDetailModal(data);" 
+                 class="list-inline-item">
+                 <i class='bx bxs-detail'></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col d-flex">
+    <div class="card radius-10 w-100">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <h5 class="mb-1">Top Productos</h5>
+          </div>
+        </div>
+      </div>
+      <div class="product-list p-3 mb-3" [perfectScrollbar]>
+        <div *ngFor="let data of topProducts">
+          <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer">
+            <div class="col-sm-8">
+              <div class="d-flex align-items-center">
+                <div class="product-img">
+                  <img src="{{ data.image_url }}" alt="" />
+                </div>
+                <div class="ms-2">
+                  <h6 class="mb-1 font-14">{{ data.description }}</h6>
+                  <p class="mb-0 font-13 text-secondary">{{ data.sku }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm text-end">
+              <h6 class="mb-1">{{ data.price | currency}}</h6>
+              <p class="mb-0">{{ data.line }} Ventas</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col d-flex">
+    <div class="card radius-10 w-100">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <h5 class="mb-0">Stock vacio</h5>
+          </div>
+        </div>
+      </div>
+      <div class="product-list p-3 mb-3" [perfectScrollbar]>
+        <div *ngFor="let data of emptyStock">
+          <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer">
+            <div class="col-sm-8">
+              <div class="d-flex align-items-center">
+                <div class="product-img">
+                  <img src="{{ data.image_url}}" alt="" />
+                </div>
+                <div class="ms-2">
+                  <h6 class="mb-1 font-14">{{ data.description }}</h6>
+                  <p class="mb-0 font-13 text-secondary">{{ data.sku }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm text-end">
+              <h6 class="mb-1">{{ data.price | currency}}</h6>
+              <p class="mb-0">{{ data.line }} unidades</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Top 10 -->
+
+<!-- Modal: modalClientDetails -->
+<div class="modal fade" id="modalClientDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detalles</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="col-12 ms-3">
+          <div class="">
+            <img src="{{ userDetail.image_url }}" class="rounded-circle" width="38" height="38" alt="" />
+          </div>
+          <div class="ms-2">
+            <h6 class="mb-1 font-14">{{ userDetail.name }}</h6>
+            <p class="mb-0 font-13 text-secondary">{{ userDetail.state }}</p>
+          </div>
+          <div class="ms-2">
+            <h6 class="mb-1 font-14">{{ userDetail.countrycode }}&nbsp;{{ userDetail.phone }}</h6>
+          </div>
+          <div class="ms-2">
+            <h6 class="mb-1 font-14">{{ userDetail.email }}</h6>
+          </div>
+          <div class="ms-2">
+            <h6 class="mb-1 font-14">{{ userDetail.rfc }}</h6>
+          </div>
+          <div class="ms-2">
+            <div class="">
+              <i *ngFor="let i of [].constructor(userDetail.type)" class='bx bxs-star text-warning'></i>
+              <i *ngFor="let i of [].constructor(4-userDetail.type)" class='bx bxs-star text-secondary'></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

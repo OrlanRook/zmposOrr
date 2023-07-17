@@ -1,0 +1,90 @@
+<div class="card">
+  <div class="card-header" [ngClass]="canOpen ? 'bg-success' : 'bg-secondary'">
+    <div class="d-flex align-items-center">
+      <div class="col">
+        <div class="align-items-center">
+          <p class="mb-0 text-white h3">Abrir caja</p>
+          <p class="mb-0 font-13 text-white"><i class='bx bx-calendar align-middle'></i>{{ currentTime | date:'dd/MM/yyyy h:mm a' }}</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="float-end">
+          <h2 class="my-1 mx-3 text-white">{{ total | currency }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-6 col-xl-6">
+        <div class="input-group position-relative mb-3">
+          <label class="input-group-text" for="inputClient" style="width:120px; display:block;">Surcursal</label>
+          <select class="form-select" id="inputClient" [(ngModel)]="currentBranch" (ngModelChange)="onChangeBranch($event)" >
+            <option *ngFor="let branch of branches" [ngValue]="branch">{{branch.name}}</option>
+          </select>
+        </div>
+        <div class="input-group position-relative mb-4">
+          <label class="input-group-text" for="inputClient" style="width:120px; display:block;">Caja</label>
+          <select class="form-select" id="inputClient" [(ngModel)]="currentDrawer" >
+            <option *ngFor="let drawer of drawers" [ngValue]="drawer">{{drawer.drawer.name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-xl-6">
+        <div class="card">
+          <div class="card-body">
+            <h5>Billetes</h5>
+          </div>
+          <div class="card-body">
+            <div *ngFor="let data of bills">
+              <div class="input-group mb-3">
+                <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[0] | currency }}</span>
+                <input [(ngModel)]="data[1]" 
+                       type="text"
+                       class="form-control enterastab" 
+                       (keypress)="inputNumberOnly($event)" 
+                       (keyup)="onChange($event,data)"
+                       tabindex ="{{ data[3] }}"
+                       placeholder="Número de billetes">
+                <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[2] | currency }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-lg-6 col-xl-6">
+        <div class="card">
+          <div class="card-body">
+            <h5>Monedas</h5>
+          </div>
+          <div class="card-body">
+            <div *ngFor="let data of coins" class="input-group mb-3">
+              <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[0] | currency }}</span>
+                <input [(ngModel)]="data[1]" 
+                       type="text"
+                       class="form-control enterastab"
+                       (keypress)="inputNumberOnly($event)"
+                       (keyup)="onChange($event,data)"
+                       placeholder="Número de monedas">
+                <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[2] | currency }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="float-end" >
+      <a class="btn mb-3 mb-lg-0 me-auto" 
+         routerLink="/pos/cart"
+         (click)="$event.preventDefault(); onOpenDrawer();"
+         [ngClass]="canOpen ? 'btn-success' : 'btn-secondary'"
+         [class.disabled]="!canOpen">
+         <i class='bx bx-lock-open'></i>Abrir caja</a>
+    </div>
+  </div>
+  
+</div>

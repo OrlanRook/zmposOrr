@@ -1,0 +1,569 @@
+<div [hidden]="isDrawerOpen!=1" class="container">
+  <div class="main-body">
+    <div class="row w-30">
+      <div class="col-lg-3"></div>
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="text-center text-primary">Ups! Falta abrir la caja.</h2>
+            <div class="d-flex flex-column align-items-center text-center">
+              <div id="duch_container">
+                <div id="spooky">
+                  <div id="body">
+                    <div id="eyes"></div>
+                    <div id="mouth"></div>
+                    <div id="feet">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <div id="shadow"></div>
+              </div>
+              <button routerLink="/pos/opendrawer" class="btn btn-primary m-1">Abrir caja</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3"></div>
+    </div><div class="col-lg-3"></div>
+  </div>
+</div>
+
+<div [hidden]="isDrawerOpen!=2" class="row row-cols-1 row-cols-xl-2">
+  <div class="col d-flex">
+    <div class="card radius-10 w-100">
+      <div class="card-header py-3">
+        <div class="d-flex align-items-center">
+          <div class="col-lg-9 col-xl-9 search-bar flex-grow-1">
+            <div class="position-relative search-bar-box">
+              <input 
+                [(ngModel)]="searchValue"
+                (keyup.escape)="onKeyEscape()"
+                (keyup)="applyFilter($event)"
+                type="text"
+                name="search"
+                class="form-control search-control"
+                placeholder="Buscar..." > <span class="position-absolute top-50 search-show translate-middle-y"><i class='bx bx-search'></i></span>
+              <span class="position-absolute top-50 search-close translate-middle-y"><i class='bx bx-x'></i></span>
+            </div>
+          </div>
+          <div class="col-lg-3 col-xl-3">
+            <div class="float-end" >
+              <a href="newItem" class="btn btn-primary mb-3 mb-lg-0" (click)="$event.preventDefault(); newModalItem();" data-bs-toggle="modal" data-bs-target="#modalNewItem" ><i class='bx bxs-plus-square'></i>Nuevo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="product-list pt-3" [perfectScrollbar] #psLeft="ngxPerfectScrollbar" >
+          <div *ngFor="let data of dataBinding | cart:searchValue:filteredCount">
+            <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer" (click)="addToCart(data)">
+              <div class="col-sm-9">
+                <div class="d-flex align-items-center">
+                  <div class="product-img">
+                    <img src="{{ data.image_url }}" alt="" />
+                  </div>
+                  <div class="ms-2">
+                    <p class="mb-0">{{ data.description }}</p>
+                    <p class="mb-1 text-muted">{{ data.sku }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm">
+                <div class="float-end" >
+                  <p class="mb-1 text-end">{{ data.public | currency:"MXN" }}</p>
+                  <p class="mb-0 text-muted">{{ getStock(data) }} Disponibles</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer text-muted">
+        <div>Productos encontrados: {{filteredCount.count}}</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col d-flex">
+    <div class="card radius-10 w-100">
+      <div class="card-header py-3">
+        <div class="d-flex align-items-center">
+          <div class="col-6">
+            <div class="input-group position-relative search-bar-box">
+              <label class="input-group-text" for="inputClient">@</label>
+              <input class="form-control" 
+                     list="datalistCustomer" 
+                     id="inputClient" 
+                     placeholder="Venta al público" 
+                     [(ngModel)]="currentClientName" 
+                     (change)="onChangeClient(currentClientName)" 
+                     (keyup.escape)="onKeyEscapeClient()" >
+              <datalist id="datalistCustomer">
+                <option *ngFor="let client of dataClient" [value]="client.name"></option>
+              </datalist>
+            </div>
+          </div>
+          <div class="col-3">
+            <div [ngStyle]="{'visibility':currentOrder.id != 0 ? 'visible' : 'hidden'}">
+              <h6 class="text-warning mb-0">Órden</h6>
+              <h6 class="text-warning mb-0">#{{ ("00000" + currentOrder.id).slice(-5) }}</h6>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="float-end" >
+                <h3 class="text-success mb-0">{{ cartTotal | currency }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="product-list pt-3" [perfectScrollbar] #psRight="ngxPerfectScrollbar" >
+          <div *ngFor="let data of dataCart ">
+            <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer" >
+              <div class="col-sm-1">
+                <!-- Button trigger modal -->
+                <button type="button" 
+                  class="btn btn-primary" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#modalQuantity"
+                  (click)="$event.preventDefault(); updateQtyModal(data);">{{ data.quantity }}</button>
+              </div>
+              <div class="col-sm-5">
+                  <div class="mb-0">{{ data.description }}</div>
+                  <div class="mb-0 text-muted">{{ data.sku }}</div>
+              </div>
+              <div class="col-sm-2">
+                <div class="float-end" >
+                  <div *ngIf="data.isNewPrice; then thenNewPriceBlock else elseNewPriceBlock"></div>
+                    <ng-template #thenNewPriceBlock>
+                      <p class="mb-0 text-end text-muted"><del>{{ data.public | currency:"MXN" }}</del></p>
+                      <p class="mb-0 text-end">{{ getPrice(data) | currency:"MXN" }}</p>
+                    </ng-template>
+                    <ng-template #elseNewPriceBlock>
+                      <p class="mb-0 text-end">{{ getPrice(data) | currency:"MXN" }}</p>
+                    </ng-template>
+                </div>
+              </div>
+              <div class="col-sm ms-2">
+                <div class="list-inline d-flex order-actions">
+                  <a href="increase"(click)="$event.preventDefault(); increaseUnit(data)" class="text-success list-inline-item"><i class='lni lni-circle-plus'></i></a>
+                  <a href="reduce" (click)="$event.preventDefault();  reduceUnit(data)" class="text-warning list-inline-item"><i class='lni lni-circle-minus'></i></a>
+                  <a href="discount"(click)="$event.preventDefault(); selectItemDiscount(data)" class="btn-discount list-inline-item" data-bs-toggle="modal" data-bs-target="#modalDiscount"><i class='lni lni-revenue'></i></a>
+                  <a href="remove" (click)="$event.preventDefault();  removeUnit(data)" class="text-danger list-inline-item"><i class='lni lni-cross-circle'></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer text-muted">
+        <div class="float-start">
+          Carrito: {{ cartNumItems }} productos
+        </div>
+        <div class="float-end" >
+          <a [class.disabled]=btnIsDisable href="#" class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#modalConfirmSave"><i class='bx bx-save'></i>Guardar</a>
+          <a [class.disabled]=btnIsDisable href="#" (click)="$event.preventDefault(); cancelCart()" class="btn btn-danger mx-1"><i class='bx bx-x'></i>Cancelar</a>
+          <a [class.disabled]=btnIsDisable 
+                 href="pay" (click)="$event.preventDefault(); startPayment();" 
+                 data-bs-toggle="modal" 
+                 data-bs-target="#modalPay" 
+                 class="btn btn-success mx-1"><i class='bx bx-dollar'></i>Pagar</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Modal: modalQuantity -->
+<div class="modal fade" id="modalQuantity" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cantidad</h5>
+        <button type="button" 
+          class="btn-close"
+          data-bs-dismiss="modal" 
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input id="inputQty" #inputQty
+          class="form-control mb-3"
+          type="text" 
+          placeholder="Cantidad" 
+          aria-label="default input example" 
+          (keypress)="inputNumberOnly($event)"
+          (keyup.enter)="btnAdd.click()"
+          [(ngModel)]="inputQuantity" >
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button #btnAdd 
+                type="button" 
+                class="btn btn-primary" 
+                data-bs-dismiss="modal" 
+                href="Actualizar" 
+                (click)="$event.preventDefault(); addQtyFromModal()">Actualizar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: modalConfirmSave -->
+<div class="modal fade" id="modalConfirmSave" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Guardar Cotización</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="col-12">
+          <label for="inputSaveNotes" class="form-label">Notas</label>
+          <textarea [(ngModel)]="inputNotes" class="form-control" id="inputSaveNotes" placeholder="Agrega un comentario..." rows="3" maxlength="300" ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cancelar</button>
+        <button type="button" class="btn btn-warning text-dark" data-bs-dismiss="modal" (click)="$event.preventDefault(); saveCart()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: modalPay -->
+<div class="modal fade" id="modalPay" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content" [ngClass]="{'border-danger': !isPaid, 'border-success' : isPaid }">
+      <div class="modal-header" >
+        <h5 class="modal-title col-sm-4" >Pago</h5>
+        <h5 class="modal-title rounded col-sm-4 ms-2 ps-3 text-light" [ngClass]="{'bg-danger': !isPaid, 'bg-success' : isPaid }">{{ cartTotal | currency }}</h5>
+        <button #closeModalPay type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="$event.preventDefault(); payCancel();" ></button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="row mb-2">
+          <label for="inputTicket" class="col-sm-4 col-form-label"># Ticket</label>
+          <div class="col-sm-8">
+            <input id="inputTicket" class="form-control" placeholder="Número de ticket" [(ngModel)]="currentTicket" [readonly]="true" >
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputTotal" class="col-sm-4 col-form-label">Por pagar</label>
+          <div class="col-sm-8">
+            <h6 id="inputTotal" class="form-control text-danger">{{ inputPendingAmout | currency }}</h6>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputPayment" class="col-sm-4 col-form-label">Efectivo</label>
+          <div class="col-sm-8">
+            <input [(ngModel)]="inputCashAmount"
+                  type="text"
+                  class="form-control"
+                  id="inputPayment"
+                  placeholder="Pago"
+                  [readonly]="isPaid"
+                  (keypress)="inputCurrencyOnly($event)"
+                  (keyup)="onChangePayAmount($event)">
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <label for="inputCashback" class="col-sm-4 col-form-label">Cambio</label>
+          <div class="col-sm-8">
+            <h6 id="inputCashback" class="form-control text-warning">{{inputCashback | currency}}</h6>
+          </div>
+        </div>
+
+        <button href="methodPayment"
+                [class.disabled]=!btnCanAddPayment
+                (click)="$event.preventDefault(); startPaymentMethod();" 
+                data-bs-toggle="modal" 
+                data-bs-target="#modalMethodPayment" 
+                class="btn btn-outline-success ms-auto"><i class='bx bxs-plus-square'></i>Agregar</button>
+      </div>
+
+      <div class="w-100 border-top"></div>
+
+      <div class="modal-body">
+        <table class="table align-middle mb-0 table-hover" id="PaymentTable">
+          <thead class="table-light">
+            <tr>
+              <th>Método</th>
+              <th>Cantidad</th>
+              <th>Referencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of dataPayment">
+              <td>
+                <div *ngIf="data.method=='CA'" class="badge rounded-pill bg-success w-100">Efectivo</div>
+                <div *ngIf="data.method=='CC'" class="badge rounded-pill bg-info text-dark w-100">Tarjeta</div>
+                <div *ngIf="data.method=='TR'" class="badge rounded-pill bg-info text-dark w-100">Tranferencia</div>
+                <!-- <div *ngIf="data.method=='DE'" class="badge rounded-pill text-dark bg-warning w-100">Diferido</div> -->
+              </td>
+              <td>
+                {{ data.total | currency }}
+              </td>
+              <td>
+                {{ data.reference }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="$event.preventDefault(); payCancel();">Cerrar</button>
+        <button [class.disabled]=!btnCanPaid type="button" class="btn btn-success" (click)="$event.preventDefault(); payCart();">Pagar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: modalMethodPayment -->
+<div class="modal fade" id="modalMethodPayment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header" >
+        <h5 class="modal-title me-3">Agregar método de pago</h5>
+        <button type="button" class="btn-close" data-bs-target="#modalPay" data-bs-toggle="modal" data-bs-dismiss="modal" aria-label="Close" ></button>
+      </div>
+      <div class="modal-body">
+        <div class="mt-3 mx-3">
+          <div class="row mb-2">
+            <label for="inputMethodPayment" class="col-sm-4 col-form-label">Método de pago</label>
+            <div class="col-sm-8">
+              <select id="inputMethodPayment" [(ngModel)]="selectedPaymentMethod" class="form-select" aria-label="Método de pago" [disabled]="isPaid">
+                <option value="CC" selected>Tarjeta</option>
+                <option value="TR">Transferencia</option>
+                <option value="DE">Diferido</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label for="inputQuantity" class="col-sm-4 col-form-label">Cantidad</label>
+            <div class="col-sm-8">
+              <input [(ngModel)]="inputPayAmount"
+                    type="text"
+                    class="form-control"
+                    id="inputQuantity"
+                    placeholder="Pago"
+                    [readonly]="isPaid"
+                    (keypress)="inputCurrencyOnly($event)"
+                    (keyup)="onChangePayAmount($event)">
+            </div>
+          </div>
+          
+          <div class="row mb-2">
+            <label for="inputReference" class="col-sm-4 col-form-label">Referencia</label>
+            <div class="col-sm-8">
+              <input [(ngModel)]="inputPayReference"
+                    type="text" 
+                    class="form-control" 
+                    id="inputReference" 
+                    [readonly]="isPaid"
+                    placeholder="Referencia">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-target="#modalPay" data-bs-toggle="modal" data-bs-dismiss="modal" >Cerrar</button>
+        <button type="button" class="btn btn-success" (click)="$event.preventDefault(); addPayment();" data-bs-target="#modalPay" data-bs-toggle="modal" data-bs-dismiss="modal">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: modalNewItem -->
+<div class="modal fade" id="modalNewItem" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header" >
+        <h5 class="modal-title col-sm-4" >Artículo nuevo</h5>
+        <button #closeModalNewItem type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="$event.preventDefault();" ></button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="row mb-2">
+          <label for="inputNewShortname" class="col-sm-4 col-form-label">Nombre corto</label>
+          <div class="col-sm-8">
+            <input [readonly]="true" id="inputNewShortname" class="form-control" [(ngModel)]="newShortName" >
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewSku" class="col-sm-4 col-form-label">SKU</label>
+          <div class="col-sm-8">
+            <input [readonly]="true" id="inputNewSku" class="form-control" [(ngModel)]="newSku" >
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewCode" class="col-sm-4 col-form-label">Código</label>
+          <div class="col-sm-8">
+            <input [readonly]="true" id="inputNewCode" class="form-control" [(ngModel)]="newCode" >
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewLine" class="col-sm-4 col-form-label">Línea</label>
+          <div class="col-sm-8">
+            <select id="inputNewLine" class="form-select" [(ngModel)]="newSelectedLine" (ngModelChange)="onChangeLine($event)">
+              <option *ngFor="let line  of newSelectLine" [ngValue]="line">{{line.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewSubLine1" class="col-sm-4 col-form-label">Sub Línea 1</label>
+          <div class="col-sm-8">
+            <select id="inputNewSubLine1" class="form-select" [(ngModel)]="newSelectedSubLine1" (ngModelChange)="onChangeSubLine1($event)">
+              <option *ngFor="let line  of newSelectSubLine1" [ngValue]="line">{{line.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewSubLine2" class="col-sm-4 col-form-label">Sub Línea 2</label>
+          <div class="col-sm-8">
+            <select id="inputNewSubLine2" class="form-select" [(ngModel)]="newSelectedSubLine2" (ngModelChange)="onChangeSubLine2($event)">
+              <option *ngFor="let line  of newSelectSubLine2" [ngValue]="line">{{line.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewDesc" class="col-sm-4 col-form-label">Descripción</label>
+          <div class="col-sm-8">
+            <input id="inputNewDesc" class="form-control" placeholder="Introduce la descripción" [(ngModel)]="newDescription">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewPrice" class="col-sm-4 col-form-label">Precio</label>
+          <div class="col-sm-8">
+            <input id="inputNewPrice" class="form-control" placeholder="Introduce el precio" [(ngModel)]="newPrice" (keypress)="inputCurrencyOnly($event)">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewStock" class="col-sm-4 col-form-label">Stock</label>
+          <div class="col-sm-8">
+            <input id="inputNewStock" class="form-control" placeholder="Cantidad existente" [(ngModel)]="newStock" (keypress)="inputNumberOnly($event)">
+          </div>
+        </div>
+        
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="$event.preventDefault(); cancelQuickNewItem();">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="$event.preventDefault(); addQuickNewItem();">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: modalDiscount -->
+<div class="modal fade" id="modalDiscount" tabindex="-1" aria-labelledby="Modal Discount" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Descuento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row mb-3">
+            <div class="col">
+              <div>Precio de venta:</div>
+            </div>
+            <div class="col">
+              <div class="text-end">$ {{ discString1  }}</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <div>Precio mínimo:</div>
+            </div>
+            <div class="col">
+              <div class="text-end">$ {{ discString2  }}</div>
+            </div>
+          </div>
+          <div class="row mb-5">
+            <div class="col">
+              <div>Nuevo precio:</div>
+            </div>
+            <div class="col">
+              <div class="text-end">$ {{ discString3  }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-1">
+          <div class="col-sm-3">
+            <div class="mt-2">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="disRadio" id="disPercent" (change)="OnChangeRadioDiscount($event)" checked>
+                <label class="form-check-label ms-1" for="disPercent">Porcentaje</label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="input-group">
+              <input #disPercentInput 
+                      type="number" 
+                      min="1"
+                      max="100"
+                      class="form-control"
+                      name="disPercentInput"
+                      id="disPercentInput"
+                      (keypress)="inputNumberOnly($event)"
+                      (keyup)="OnModalChangeDiscountPercent(disPercentInput.value)"
+                      [disabled]="discPerceDisable"
+                      [(ngModel)]="discPerceSelected"
+                      placeholder="Porcentaje">
+              <span class="input-group-text" id="basic-addon2" style="width:40px; display:block;">%</span>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-1">
+          <div class="col-sm-3">
+            <div class="mt-2">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="disRadio" id="disQuantity" (change)="OnChangeRadioDiscount($event)">
+                <label class="form-check-label ms-1" for="disQuantity">Cantidad</label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="input-group">
+              <input #disQuantityInput
+                      type="number" 
+                      class="form-control" 
+                      name="disQuantityInput" 
+                      id="disQuantityInput" 
+                      (keypress)="inputNumberOnly($event)" 
+                      (keyup)="OnModalChangeDiscountAmount(disQuantityInput.value)"
+                      [disabled]="discAmountDisable" 
+                      [(ngModel)]="discAmoutSelected"
+                      placeholder="Cantidad" >
+              <span class="input-group-text" id="basic-addon2" style="width:40px; display:block;">$</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+                (click)="$event.preventDefault(); OnModalCancelDiscount()">Cancelar</button>
+        <button [class.disabled]=discDisableApply
+                type="button"
+                class="btn btn-primary"
+                data-bs-dismiss="modal"
+                (click)="$event.preventDefault(); OnModalApplyDiscount()">Aplicar</button>
+      </div>
+    </div>
+  </div>
+</div>
+

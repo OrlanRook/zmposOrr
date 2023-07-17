@@ -1,0 +1,116 @@
+<div class="row">
+  <div class="col-lg-6 col-xl-6">
+    <div class="card">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-sm-8">
+            <h5>Objetivos Financieros</h5>
+          </div>
+          <div class="col-sm-4">
+            <div class="float-end" >
+              <a href="newgoal" 
+              class="btn btn-success mx-1"
+              (click)="$event.preventDefault();" data-bs-toggle="modal" 
+              data-bs-target="#modalNewGoal"><i class='fadeIn animated bx bxs-plus-square'></i>Nuevo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <label for="dateYearValue" class="col-sm-3 col-form-label">Año</label>
+          <div class="col-sm-9">
+            <select class="form-select" id="dateYearValue" [(ngModel)]="currentYear" (ngModelChange)="onChangeYear($event)" >
+              <option *ngFor="let year of years" [ngValue]="year">{{ year }}</option>
+            </select>
+          </div>
+        </div>
+        <hr>
+        <table class="table mb-0 table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Mes</th>
+              <th scope="col" class="cell-currency">Cantidad</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of goals">
+              <td>{{ data.name }}</td>
+              <td class="cell-currency">{{ data.total | currency }}</td>
+              <td>
+                <a href="#" (click)="$event.preventDefault(); onUpdate(data);" class="list-inline-item" data-bs-toggle="modal" 
+                data-bs-target="#modalUpdateMonth"><i class='bx bxs-edit'></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer">
+        <div class="float-end" >
+          <h5>{{ yearGoal | currency}}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Update Month -->
+<div class="modal fade" id="modalUpdateMonth" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Actualizar cantidad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-2">
+          <label for="amount" class="col-sm-4 col-form-label">{{ selectedMonth?.name }}&nbsp;{{ selectedMonth?.year }}</label>
+          <div class="col-sm-8">
+            <input type="number" class="form-control" id="amount" [(ngModel)]="amountUpdate">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cerrar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="$event.preventDefault(); updateAmount();">Actualizar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: New Goal -->
+<div class="modal fade" id="modalNewGoal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Nuevo Objetivo Anual</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-2">
+          <label for="year" class="col-sm-4 col-form-label">Año</label>
+          <div class="col-sm-8">
+            <input type="number" class="form-control" id="year" [(ngModel)]="newYear">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="newYearAmount" class="col-sm-4 col-form-label">Objectivo Anual</label>
+          <div class="col-sm-8">
+            <input type="number" class="form-control cell-currency" id="newYearAmount" [(ngModel)]="newYearAmount" (change)="onChangeYearAmount()" >
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="newMonth" class="col-sm-4 col-form-label">Objectivo Mensual</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control cell-currency" id="newMonth" disabled value="{{ newMonthAmount | currency}}">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cerrar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="$event.preventDefault(); newGoal();">Crear</button>
+      </div>
+    </div>
+  </div>
+</div>

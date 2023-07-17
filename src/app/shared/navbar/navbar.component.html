@@ -1,0 +1,184 @@
+<header>
+  <div id="topbar" class="topbar d-flex align-items-center">
+    <nav class="nav navbar navbar-expand">
+      <div class="mobile-toggle-menu"><i (click)="toggleSidebar()" class='bx bx-menu'></i>
+      </div>
+
+      <div class="user-info ps-3">
+        <p class="user-name mb-0">Sucursal</p>
+        <p class="designattion mb-0">{{ currentBranch.name }}</p>
+      </div>
+
+      <div class="user-info ps-3">
+        <p class="user-name mb-0">Caja</p>
+        <p class="designattion mb-0">{{ currentDrawer.name }}</p>
+      </div>
+
+      <!-- <div class="search-bar flex-grow-1">
+        <div class="position-relative search-bar-box">
+          <input type="text" class="form-control search-control" placeholder="Type to search..."> <span class="position-absolute top-50 search-show translate-middle-y"><i class='bx bx-search'></i></span>
+          <span class="position-absolute top-50 search-close translate-middle-y"><i class='bx bx-x'></i></span>
+        </div>
+      </div> -->
+
+      <div class="top-menu ms-auto">
+        <ul class="navbar-nav align-items-center">
+          <li class="nav-item dropdown dropdown-large">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">	<i class='bx bx-category'></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end">
+              <div class="row row-cols-3 g-3 p-3">
+                <div class="col text-center">
+                    <a class="nav-link" routerLink="/pos/cart">
+                      <div class="app-box mx-auto bg-gradient-lush text-white"><i class='bx bx-store'></i>
+                      </div>
+                    </a>
+                    <div class="app-title">POS</div>
+                </div>
+                <div class="col text-center">
+                  <a class="nav-link" routerLink="/pos/sales">
+                    <div class="app-box mx-auto bg-gradient-kyoto text-dark"><i class='bx bx-money'></i>
+                    </div>
+                  </a>
+                  <div class="app-title">Mis ventas</div>
+                </div>
+                <div class="col text-center">
+                  <a class="nav-link" routerLink="/pos/orders">
+                    <div class="app-box mx-auto bg-gradient-blues text-dark"><i class='bx bx-cart'></i>
+                    </div>
+                  </a>
+                  <div class="app-title">Cotizaciones</div>
+                </div>
+                <div class="col text-center">
+                  <a class="nav-link" routerLink="/pos/orders">
+                    <div class="app-box mx-auto bg-gradient-burning text-white"><i class='bx bx-transfer'></i>
+                    </div>
+                  </a>
+                  <div class="app-title">Devoluciones</div>
+                </div>
+                <div class="col text-center" *ngIf="showBoardButton" >
+                  <a class="nav-link" routerLink="/admin">
+                    <div class="app-box mx-auto bg-gradient-cosmic text-white"><i class='bx bx-home-circle'></i>
+                    </div>
+                  </a>
+                  <div class="app-title">Dasboard</div>
+                </div>
+                <div class="col text-center" >
+                  <a class="nav-link" routerLink="/pos/warehouse">
+                    <div class="app-box mx-auto bg-gradient-moonlit text-white"><i class='lni lni-cart-full'></i>
+                    </div>
+                  </a>
+                  <div class="app-title">Almacén</div>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-item dropdown dropdown-large">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false"> <span  *ngIf="showNotification" class="alert-count">{{ countNotification }}</span>
+              <i class='bx bx-bell'></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end">
+              <a href="javascript:;">
+                <div class="msg-header">
+                  <p class="msg-header-title">Notificaciones</p>
+                </div>
+              </a>
+              <div class="header-notifications-list" [perfectScrollbar]>
+                <div *ngFor="let data of navNotifications">
+                  <a class="dropdown-item" href="notify" (click)="$event.preventDefault(); deactivateNotification(data);">
+                    <div class="d-flex align-items-center">
+                      <div class="notify {{ data.type }}"><i class="{{ data.class_image }}"></i>
+                      </div>
+                      <div class="flex-grow-1">
+                        <h6 class="msg-name">{{ data.header }}<span class="msg-time float-end">{{ data.timediff }}</span></h6>
+                        <p class="msg-info">{{ data.body}}</p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="text-center msg-footer"></div>
+              
+            </div>
+          </li>
+
+        </ul>
+      </div>
+      <div class="user-box dropdown">
+        <a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="{{ dataBinding.image_url }}" class="user-img" alt="user avatar">
+          <div class="user-info ps-3">
+            <p class="user-name mb-0">{{ dataBinding.name }}</p>
+            <p class="designattion mb-0">{{ dataBinding.role ? dataBinding.role.name : '' }}</p>
+          </div>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" routerLink="/pos/profile"><i class="bx bx-user"></i><span>Mi perfil</span></a></li>
+          <li><div class="dropdown-divider mb-0"></div></li>
+          <li><a class="dropdown-item" routerLink="/pos/opendrawer"><i class='bx bx-lock-open'></i><span>Abrir caja</span></a></li>
+          <li><a class="dropdown-item" routerLink="/pos/closedrawer"><i class='bx bx-lock'></i><span>Cerrar caja</span></a></li>
+          <li><div class="dropdown-divider mb-0"></div></li>
+          <li><a class="dropdown-item" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalCalculator" ><i class='bx bx-calculator'></i><span>Calculadora</span></a></li>
+          <li><div class="dropdown-divider mb-0"></div></li>
+          <li><a class="dropdown-item" routerLink="/pos/logout"><i class='bx bx-log-out'></i><span>Salir</span></a></li>
+          
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>
+
+
+<!-- Modal: modalCalculator -->
+<div class="modal fade" id="modalCalculator" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+<div class="modal-dialog modal-xl">
+  <div class="modal-content">
+    <div class="modal-header bg-primary" >
+      <h3 class="modal-title me-3 text-white">Calculadora</h3>
+      <h3 class="my-1 mx-3 text-white">{{ total | currency }}</h3>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="$event.preventDefault(); clearTotal();"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-6 col-xl-6">
+          <div class="card">
+            <div class="card-body">
+              <h5>Billetes</h5>
+            </div>
+            <div class="card-body">
+              <div *ngFor="let data of bills">
+                <div class="input-group mb-3">
+                  <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[0] | currency }}</span>
+                  <input [(ngModel)]="data[1]" type="text" class="form-control enterastab" (keypress)="inputNumberOnly($event)" (keyup)="onChange($event,data)"  placeholder="Número de billetes">
+                  <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[2] | currency }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+        </div>
+        <div class="col-lg-6 col-xl-6">
+          <div class="card">
+            <div class="card-body">
+              <h5>Monedas</h5>
+            </div>
+            <div class="card-body">
+              <div *ngFor="let data of coins" class="input-group mb-3">
+                <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[0] | currency }}</span>
+                  <input [(ngModel)]="data[1]" type="text" class="form-control enterastab" (keypress)="inputNumberOnly($event)" (keyup)="onChange($event,data)"  placeholder="Número de monedas">
+                  <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[2] | currency }}</span>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="$event.preventDefault(); printCalc();" >Imprimir</button>
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="$event.preventDefault(); clearTotal();" >Cerrar</button>
+    </div>
+  </div>
+</div>
+</div>

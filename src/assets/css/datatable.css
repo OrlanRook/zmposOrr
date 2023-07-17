@@ -1,0 +1,13 @@
+#search-area {
+    width: 100%;
+    clear: both;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+#search-area input {
+    width: 300px;
+    font-size: 1rem;
+    padding: 5px;
+    border-radius: 30px;
+    padding-left: 3rem !important;
+}

@@ -1,0 +1,17 @@
+.customTooltip .tooltip-inner {
+  background-color: #585858;
+  color: #b0b6bc;
+  font-size: 90%;
+}
+.customTooltip.bs-tooltip-end .tooltip-arrow::before {
+  border-right-color: rgba(255, 255, 255, 0.14);
+}
+.customTooltip.bs-tooltip-start .tooltip-arrow::before {
+  border-left-color: rgba(255, 255, 255, 0.14);
+}
+.customTooltip.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: rgba(255, 255, 255, 0.14);
+}
+.customTooltip.bs-tooltip-bottom .tooltip-arrow::before {
+  border-bottom-color: rgba(255, 255, 255, 0.14);
+}

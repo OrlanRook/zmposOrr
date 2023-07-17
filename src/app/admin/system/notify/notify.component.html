@@ -1,0 +1,151 @@
+<div class="row">
+  <div class="col-lg-6 col-xl-6">
+    <div class="card">
+      <div class="card-header">
+        <h5>Crear notificación</h5>
+      </div>
+      <div class="card-body">
+        <div class="row mb-2">
+          <label for="inputHeader" class="col-sm-4 col-form-label">Fecha Expira</label>
+          <div class="col-sm-8">
+            <input type="date" class="form-control" name="dateDayValue" id="dateDayValue" [(ngModel)]="newDate">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputType" class="col-sm-4 col-form-label">Tipo</label>
+          <div class="col-sm-8">
+            <select class="form-select" aria-label=".form-select-sm example" id="inputType" [(ngModel)]="newType" >
+              <option value="bg-light-success text-success">Éxito</option>
+              <option value="bg-light-primary text-primary">Información</option>
+              <option value="bg-light-warning text-warning">Advertencia</option>
+              <option value="bg-light-danger text-danger">Error</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputIcon" class="col-sm-4 col-form-label">Ícono</label>
+          <div class="col-sm-2">
+            <h4>
+              <div class="notify {{ newType }}" style="text-align: center">
+                <i class="{{ newIcon }}"></i>
+              </div>
+            </h4>
+          </div>
+          <div class="col-sm-6">
+            <select class="form-select  ms-1" aria-label=".form-select-sm example" id="inputIcon" [(ngModel)]="newIcon">
+              <option value="bx bx-cart-alt">Carrito</option>
+              <option value="bx bx-file">Archivo</option>
+              <option value="bx bx-home-circle">Home</option>
+              <option value="bx bx-message-detail">Mensaje</option>
+              <option value="lni lni-cake">Pastel</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputHeader" class="col-sm-4 col-form-label">Título</label>
+          <div class="col-sm-8">
+            <input id="inputHeader" class="form-control" [(ngModel)]="newHeader" placeholder="Título">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputBody" class="col-sm-4 col-form-label">Mensaje</label>
+          <div class="col-sm-8">
+            <input id="inputBody" class="form-control" [(ngModel)]="newBody" placeholder="Mensaje">
+          </div>
+        </div>
+        <div class="float-end" >
+          <a href="generate" 
+             class="btn btn-success mx-1"
+             (click)="$event.preventDefault(); addNotification();"><i class='fadeIn animated bx bx-message-check'></i>Crear</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6 col-xl-6">
+    <div class="card">
+      <div class="card-header">
+        <h5>Empleados</h5>
+      </div>
+      <div class="card-body">
+          <table class="table mb-0 table-striped">
+            <thead>
+              <tr>
+                <th scope="col"><input #chkAll type="checkbox" id="chkAll" [checked]=checkAllEmployee (change)="onCheck(chkAll.checked)"></th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Rol</th>
+              </tr>
+            </thead>
+          </table>
+          <div class="employee-list" [perfectScrollbar]>
+            <table class="table mb-0 table-striped">
+              <tbody>
+                  <tr *ngFor="let data of employees">
+                    <td><input type="checkbox" id="scales" name="scales" [checked]=data.checked [(ngModel)]="data.checked"></td>
+                    <td>{{ data.name }}</td>
+                    <td>{{ data.role.name }}</td>
+                  </tr>
+                </tbody>
+            </table>
+          </div>
+      </div>
+      <div class="float-end" >
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12 col-xl-12">
+    <div class="card">
+      <div class="card-header">
+        <h5>Notificaciones</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table mb-0 table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Expira</th>
+                <th scope="col">Ícono</th>
+                <th scope="col">Título</th>
+                <th scope="col">Mensaje</th>
+                <th scope="col">Usuario</th>
+                <th scope="col" class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of notifications">
+                <div *ngIf="checkExpire(item); then normal; else expired"></div>
+                <ng-template #normal>
+                  <td width="90">{{ item.expire | date:'MM/dd/yyyy' }}</td>
+                  <td width="30" style="text-align: center"><div class="notify {{ item.type }}"><i class="{{ item.class_image }}"></i></div></td>
+                  <td>{{ item.header }}</td>
+                  <td>{{ item.body }}</td>
+                  <td>{{ item.user.name }}</td>
+                  <td>
+                    <div class="list-inline d-flex order-actions">
+                      <a href="#" (click)="$event.preventDefault(); removeNotification(item);" class="text-danger list-inline-item"><i class='bx bxs-trash'></i></a>
+                    </div>
+                  </td>
+                </ng-template>
+                <ng-template #expired>
+                  <td width="90"><s>{{ item.expire | date:'MM/dd/yyyy' }}</s></td>
+                  <td width="30" style="text-align: center"><div class="notify {{ item.type }}"><i class="{{ item.class_image }}"></i></div></td>
+                  <td><s>{{ item.header }}</s></td>
+                  <td><s>{{ item.body }}</s></td>
+                  <td><s>{{ item.user.name }}</s></td>
+                  <td>
+                    <div class="list-inline d-flex order-actions">
+                      <a href="#" (click)="$event.preventDefault(); removeNotification(item);" class="text-danger list-inline-item"><i class='bx bxs-trash'></i></a>
+                    </div>
+                  </td>
+                </ng-template>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<div class="row">
+    <div class="col-lg-6 col-xl-6">
+        <div class="card radius-10">
+            <div class="card-header">
+                <h5>Generador de etiquetas</h5>
+            </div>
+            <div class="card-body">
+                <div class="input-group position-relative mb-3">
+                    <label class="input-group-text" for="inputOffset" style="width:120px; display:block;">Offset</label>
+                    <input type="number" id="inputOffset" class="form-control" [(ngModel)]="inputOffset" />
+                  </div>
+                  <div class="input-group position-relative mb-3">
+                    <label class="input-group-text" for="inputCopies" style="width:120px; display:block;">Copias</label>
+                    <input type="number" id="inputCopies" class="form-control" [(ngModel)]="inputCopies" />
+                  </div>
+                  <div class="float-end" >
+                    <button class="btn btn-primary btn-sm" (click)="generate()" [disabled]="!btnGenDisable" >Generar</button>
+                  </div>
+            </div>
+            <div class="card-footer">
+        
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 col-xl-6">
+        <div class="card radius-10">
+            <div class="card-header">
+                <h5>Actículos disponibles</h5>
+            </div>
+            <div class="card-body">
+                <div class="product-list pt-3" [perfectScrollbar] >
+                    <div *ngFor="let data of dataBinding">
+                      <div class="row border ms-0 me-3 mb-3 py-1 radius-10 cursor-pointer" (click)="addToCart(data)">
+                        <div class="col-sm-9">
+                          <div class="d-flex align-items-center">
+                            <div class="ms-2">
+                              <p class="mb-0">{{ data.description }}</p>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- <div class="col-sm">
+                          <div class="float-end" >
+                            <p class="mb-0 text-muted">{{ getStock(data) }} Disponibles</p>
+                          </div>
+                        </div> -->
+                      </div>
+                    </div>
+                  </div>
+            </div>
+            <div class="card-footer">
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-xl-6">
+        <div class="card radius-10">
+            <div class="card-header">
+                <h5>Artículos seleccionados</h5>
+            </div>
+            <div class="card-body">
+                <div class="product-list pt-3" [perfectScrollbar] >
+                    <div *ngFor="let data of dataCart ">
+                      <div class="row border ms-0 me-3 mb-3 py-2 radius-10 cursor-pointer" >
+                        <!-- <div class="col-1">
+                          <button type="button" 
+                            class="btn btn-primary" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalQuantity"
+                            (click)="$event.preventDefault(); updateQtyModal(data);">{{ data.quantity }}</button>
+                        </div> -->
+                        <div class="col ms-3 mt-2">
+                            <div class="">{{ data.description }}</div>
+                        </div>
+                        <div class="col-1">
+                          <div class="list-inline d-flex order-actions">
+                            <a href="remove" (click)="$event.preventDefault();  removeUnit(data)" class="text-danger list-inline-item"><i class='lni lni-cross-circle'></i></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+            <div class="card-footer">
+        
+            </div>
+        </div>
+    </div>
+</div>

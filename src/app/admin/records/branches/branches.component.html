@@ -1,0 +1,116 @@
+<div class="row">
+  <div class="col-xl-12 d-flex">
+    <div class="card radius-10 w-100" >
+      <div class="card-header">
+        <div class="d-flex align-items-center">
+          <div>
+            <h5 class="mb-1">Sucursales</h5>
+          </div>
+          <div class="ms-auto"><a href="new" (click)="$event.preventDefault(); onAction(dataSelected,'C');" data-bs-toggle="modal" data-bs-target="#modalItemDetail"  class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i>Agregar</a></div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="d-lg-flex align-items-center mb-4 gap-3 col-xl-3 ">
+          <div class="position-relative search-bar-box">
+            <input 
+              [(ngModel)]="filterValue"
+              (keyup.escape)="onKeyFilterEscape()"
+              (keyup)="onKeyFilter($event)"
+              type="text"
+              name="search"
+              class="form-control search-control"
+              placeholder="Buscar..." > <span class="position-absolute top-50 search-show translate-middle-y"><i class='bx bx-search'></i></span>
+            <span class="position-absolute top-50 search-close translate-middle-y"><i class='bx bx-x'></i></span>
+          </div>
+        </div>
+        <div class="table-responsive mt-4">
+          <table #ProviderTable class="table align-middle mb-0 table-hover" id="ProviderTable">
+            <thead class="table-light">
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th class="cell-action" >Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of dataBinding | pipeBranch:filterValue:filteredCount | paginate: { itemsPerPage: pagSize, currentPage: pagPage, totalItems: pagTotal }">
+                
+                <td>{{ data.name }}</td>
+                <td>{{ data.email }}</td>
+                <td>{{ data.countrycode }}&nbsp;{{ data.phone }}</td>
+                <td>{{ data.address }}</td>
+                <td>
+                  <div class="list-inline d-flex order-actions">
+                    <a href="#" (click)="$event.preventDefault(); onAction(data,'R');" class="list-inline-item" data-bs-toggle="modal" data-bs-target="#modalItemDetail"><i class='bx bxs-detail'></i></a>
+                    <a href="#" (click)="$event.preventDefault(); onAction(data,'U');" class="list-inline-item" data-bs-toggle="modal" data-bs-target="#modalItemDetail"><i class='bx bxs-edit'></i></a>
+                    <a href="#" (click)="$event.preventDefault(); onAction(data,'D');" class="text-danger list-inline-item" data-bs-toggle="modal" data-bs-target="#modalItemDetail"><i class='bx bxs-trash'></i></a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="d-flex align-items-center">
+            <pagination-controls class="mt-3" (pageChange)="pageChangeEvent($event)"
+              previousLabel="Previo"
+              nextLabel="Siguiente">
+            </pagination-controls>
+            <div class="ms-auto">{{ pagMessage }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal: modalItemDetail -->
+<div class="modal fade" id="modalItemDetail" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content" [ngClass]="isDeleting">
+      <div class="modal-header" >
+        <h5 class="modal-title col-sm-4" [ngClass]="isDelFontColor">{{ modalTitle }}</h5>
+        <button #closeModalItemDetail type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="$event.preventDefault();" ></button>
+      </div>
+      
+      <div class="modal-body"  [perfectScrollbar]>
+        <div class="row mb-2">
+          <label for="inputNewShortname" class="col-sm-4 col-form-label" [ngClass]="isDelFontColor">Nombre</label>
+          <div class="col-sm-8">
+            <input [readonly]="modalReadonly" id="inputNewShortname" class="form-control enterastab" [(ngModel)]="dataSelected.name" >
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewShortname" class="col-sm-4 col-form-label" [ngClass]="isDelFontColor">Email</label>
+          <div class="col-sm-8">
+            <input [readonly]="modalReadonly" id="inputNewShortname" class="form-control enterastab" [(ngModel)]="dataSelected.email" >
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewShortname" class="col-sm-4 col-form-label"  [ngClass]="isDelFontColor">Código Teléfono</label>
+          <div class="col-sm-8">
+            <input [readonly]="modalReadonly" id="inputNewShortname" class="form-control enterastab" [(ngModel)]="dataSelected.countrycode" >
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewShortname" class="col-sm-4 col-form-label" [ngClass]="isDelFontColor">Teléfono</label>
+          <div class="col-sm-8">
+            <input [readonly]="modalReadonly" id="inputNewShortname" class="form-control enterastab" [(ngModel)]="dataSelected.phone" >
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label for="inputNewShortname" class="col-sm-4 col-form-label" [ngClass]="isDelFontColor">Dirección</label>
+          <div class="col-sm-8">
+            <input [readonly]="modalReadonly" id="inputNewShortname" class="form-control enterastab" [(ngModel)]="dataSelected.address" >
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="$event.preventDefault(); modalCancel();">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="$event.preventDefault(); modalResult();">{{ modalOkButton }}</button>
+      </div>
+    </div>
+  </div>
+</div>

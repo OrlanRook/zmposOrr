@@ -1,0 +1,171 @@
+<div class="row">
+  <div class="col-lg-6 col-xl-6">
+    <div class="card">
+      <div class="card-body">
+        <h5>Reportes disponibles</h5>
+        <hr />
+        <form>
+          <div class="row mb-3">
+            <label for="filterItem" class="col-sm-3 col-form-label">Seleccionar</label>
+            <div class="col-sm-9">
+              <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" name="filterItem" id="filterItem" [(ngModel)]="rptSelected" (change)="OnChangeReport($event)" >
+                <option *ngFor="let rpt of rptList" [ngValue]="rpt.id" class="{{ rpt.class }}" [disabled]="rpt.disable == true"><div [innerHTML]="rpt.name" ></div></option>
+              </select>
+            </div>
+          </div>
+        </form>
+        <h6 class="fw-bold">"{{ rptName }}"</h6>
+        <div class="text-secondary">{{ rptDate }}</div>
+        <div class="float-end" >
+          <a href="generate" 
+             class="btn btn-success mx-1"
+             (click)="$event.preventDefault(); onClickGenerate();"><i class='fadeIn animated bx bx-bar-chart'></i>Generar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6 col-xl-6">
+    <div class="card">
+      <div class="card-body">
+        <h5>Selecionar fecha</h5>
+        <hr />
+        <div class="row mb-1">
+          <div class="col-sm-3">
+            <div class="mt-2">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="radioDate" id="dateDay" (change)="OnChangeDate($event)" checked>
+                <label class="form-check-label ms-1" for="dateDay">Día</label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <input type="date" class="form-control" name="dateDayValue" id="dateDayValue" [disabled]="rptDateDayDisable" (change)="OnChangeCalendar($event)" [(ngModel)]="rptDateDay">
+          </div>
+        </div>
+        <div class="row mb-1">
+          <div class="col-sm-3">
+            <div class="mt-2">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="radioDate" id="dateWeek" (change)="OnChangeDate($event)">
+                <label class="form-check-label ms-1" for="dateWeek">Semana</label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <input type="week" class="form-control" name="dateWeekValue" id="dateWeekValue" [disabled]="rptDateWeekDisable" (change)="OnChangeCalendar($event)" [(ngModel)]="rptDateWeek" >
+          </div>
+        </div>
+        <div class="row mb-1">
+          <div class="col-sm-3">
+            <div class="mt-2">
+              <input class="form-check-input" type="radio" name="radioDate" id="dateMonth" (change)="OnChangeDate($event)">
+              <label class="form-check-label ms-1" for="dateMonth">Mes</label>
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <input type="month" class="form-control" id="dateMonthValue" [disabled]="rptDateMonthDisable" (change)="OnChangeCalendar($event)" [(ngModel)]="rptDateMonth">
+          </div>
+        </div>
+        <div class="row mb-1">
+          <div class="col-sm-3">
+            <div class="mt-2">
+              <input class="form-check-input" type="radio" name="radioDate" id="dateYear" (change)="OnChangeDate($event)">
+              <label class="form-check-label ms-1" for="dateYear">Anual</label>
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <select class="form-select" aria-label=".form-select-sm example" id="dateYearValue" [disabled]="rptDateYearDisable" (change)="OnChangeCalendar($event)" [(ngModel)]="rptDateYear">
+              <option selected>2023</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-1">
+          <div class="col-sm-3">
+            <input class="form-check-input" type="radio" name="radioDate" id="dateRange" (change)="OnChangeDate($event)">
+            <label class="form-check-label ms-1" for="dateRange">Rango fechas</label>
+          </div>
+          <div class="col-sm-9"></div>
+        </div>
+        <div class="row mb-1">
+          <div class="col-sm-3"></div>
+          <div class="col-sm-9">
+            <div class="row mb-1">
+              <div class="col-sm-3">
+                <div class="mt-2">
+                  <label class="form-check-label ms-1" for="rangeBegin">Inicio</label>
+                </div>
+              </div>
+              <div class="col-sm-9">
+                <input type="date" class="form-control" id="rangeBegin" [disabled]="rptDateRangeDisable" (change)="OnChangeCalendar($event)" [(ngModel)]="rptDateRangeBegin">
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-sm-3">
+                <div class="mt-2">
+                  <label class="form-check-label ms-1" for="rangeEnd">Final</label>
+                </div>
+              </div>
+              <div class="col-sm-9">
+                <input type="date" class="form-control" id="rangeEnd" [disabled]="rptDateRangeDisable" (change)="OnChangeCalendar($event)" [(ngModel)]="rptDateRangeEnd">
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    </div>
+  </div>
+  <!-- <div class="col-lg-6 col-xl-6">
+    <div class="card">
+      <div class="card-body">
+        <h5>Selecionar filtro</h5>
+        <hr />
+        <div class="row mb-1">
+          <label for="filterItem" class="col-sm-3 col-form-label">Artículo</label>
+          <div class="col-sm-9">
+            <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" name="filterItem" id="filterItem" [(ngModel)]="filterItemSelected" >
+              <option *ngFor="let item of filterItem" [ngValue]="item.id" class="{{ item.description }}"><div [innerHTML]="item.description" ></div></option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-1">
+          <label for="filterItem" class="col-sm-3 col-form-label">Cliente</label>
+          <div class="col-sm-9">
+            <select class="form-select" aria-label=".form-select-sm example" id="filterItem">
+              <option selected>2023</option>
+              <option value="2023">2023</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-1">
+          <label for="filterItem" class="col-sm-3 col-form-label">Sucursal</label>
+          <div class="col-sm-9">
+            <select class="form-select" aria-label=".form-select-sm example" id="filterItem">
+              <option selected>2023</option>
+              <option value="2023">2023</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-0">
+          <label for="filterItem" class="col-sm-3 col-form-label">Caja</label>
+          <div class="col-sm-9">
+            <select class="form-select" aria-label=".form-select-sm example" id="filterItem">
+              <option selected>2023</option>
+              <option value="2023">2023</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</div>

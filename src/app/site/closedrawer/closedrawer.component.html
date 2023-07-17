@@ -1,0 +1,97 @@
+<div class="card">
+  <div class="card-header" [ngClass]="canClose ? 'bg-danger' : 'bg-secondary'" >
+    <div class="d-flex align-items-center">
+      <div class="col">
+        <div class="align-items-center">
+          <p class="mb-0 text-white h3">Cerrar caja</p>
+          <p class="mb-0 font-13 text-white"><i class='bx bx-calendar align-middle'></i>{{ currentTime | date:'dd/MM/yyyy h:mm a' }}</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="float-end">
+          <h2 class="my-1 mx-3 text-white">{{ total | currency }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-6 col-xl-6">
+        <div class="input-group position-relative mb-3">
+          <label for="inputOpenCash" class="input-group-text" style="width:120px; display:block;">Apertura</label>
+          <input id="inputOpenCash" class="form-control" type="text" readonly placeholder="Cantidad cuando se abrió la caja">
+          <span class="input-group-text text-end" style="width:120px; display:block;">{{ amtOpen | currency }}</span>
+        </div>
+        <div class="input-group position-relative mb-3">
+          <label for="inputCash" class="input-group-text" style="width:120px; display:block;">Efectivo</label>
+          <input id="inputCash" class="form-control" type="text" readonly placeholder="Cantidad recibida en efectivo">
+          <span class="input-group-text text-end" style="width:120px; display:block;">{{ amtCash | currency }}</span>
+        </div>
+        <div class="input-group position-relative mb-3">
+          <label for="inputTDC" class="input-group-text" style="width:120px; display:block;">TDC</label>
+          <input id="inputTDC" class="form-control" type="text" readonly placeholder="Cantidad recibida por pago con tarjeta">
+          <span class="input-group-text text-end" style="width:120px; display:block;">{{ amtCard | currency }}</span>
+        </div>
+        <div class="input-group position-relative mb-3">
+          <label for="inputTransfer" class="input-group-text" style="width:120px; display:block;">Transferencia</label>
+          <input id="inputTransfer" class="form-control" type="text" readonly placeholder="Cantidad recibida por transferencia">
+          <span class="input-group-text text-end" style="width:120px; display:block;">{{ amtTransfer | currency }}</span>
+        </div>
+      </div>
+        <div class="col-lg-6 col-xl-6">
+        <div class="input-group position-relative mb-3">
+          <label for="inputDeviation" class="input-group-text" style="width:120px; display:block;">Desviación</label>
+          <input id="inputDeviation" class="form-control" type="text" readonly placeholder="Diferencia entre efectivo en caja y en sistema">
+          <span class="input-group-text text-end text-white" [ngClass]="amtDeviation < 0 ? 'bg-danger' : 'bg-primary'" style="width:120px; display:block;">{{ amtDeviation | currency }}</span>
+        </div>
+        <div class="input-group position-relative mb-3">
+          <label for="inputNotes" class="input-group-text" style="width:120px; display:block;">Notas</label>
+          <input id="inputNotes" class="form-control" type="text" placeholder="Notas al cierre de la caja" [(ngModel)]="amtNotes">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-xl-6">
+        <div class="card">
+          <div class="card-body">
+            <h5>Billetes</h5>
+          </div>
+          <div class="card-body">
+            <div *ngFor="let data of bills">
+              <div class="input-group mb-3">
+                <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[0] | currency }}</span>
+                <input [(ngModel)]="data[1]" type="text" class="form-control enterastab" (keypress)="inputNumberOnly($event)" (keyup)="onChange($event,data)"  placeholder="Número de billetes">
+                <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[2] | currency }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-lg-6 col-xl-6">
+        <div class="card">
+          <div class="card-body">
+            <h5>Monedas</h5>
+          </div>
+          <div class="card-body">
+            <div *ngFor="let data of coins" class="input-group mb-3">
+              <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[0] | currency }}</span>
+                <input [(ngModel)]="data[1]" type="text" class="form-control enterastab" (keypress)="inputNumberOnly($event)" (keyup)="onChange($event,data)"  placeholder="Número de monedas">
+                <span class="input-group-text text-end" style="width:120px; display:block;">{{ data[2] | currency }}</span>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="float-end" >
+      <a class="btn mb-3 mb-lg-0 me-auto" 
+         routerLink="/pos/cart"
+         (click)="$event.preventDefault(); onCloseDrawer();"
+         [ngClass]="canClose ? 'btn-danger' : 'btn-secondary'"
+         [class.disabled]="!canClose">
+         <i class='bx bx-lock-open'></i>Cerrar caja</a>
+    </div>
+  </div>
+  
+</div>

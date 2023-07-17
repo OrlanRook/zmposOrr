@@ -1,0 +1,99 @@
+<div class="row">
+  <div class="col-lg-6 col-xl-6">
+    <div class="card">
+      <div class="card-header">
+        <h5>Elegir cajero</h5>
+      </div>
+      <div class="card-body">
+        <div class="input-group position-relative mb-3">
+          <label class="input-group-text" for="inputClient" style="width:120px; display:block;">Surcursal</label>
+          <select class="form-select" id="inputClient" [(ngModel)]="currentBranch" (ngModelChange)="onChangeBranch($event)" >
+            <option *ngFor="let branch of branches" [ngValue]="branch">{{branch.name}}</option>
+          </select>
+        </div>
+        <div class="input-group position-relative mb-3">
+          <label class="input-group-text" for="inputClient" style="width:120px; display:block;">Caja</label>
+          <select class="form-select" id="inputClient" [(ngModel)]="currentDrawer" (ngModelChange)="onChangeDrawer($event)" >
+            <option *ngFor="let drawer of drawers" [ngValue]="drawer">{{drawer.name}}</option>
+          </select>
+        </div>
+        <div class="input-group position-relative mb-3">
+          <label class="input-group-text" for="inputEmployee" style="width:120px; display:block;">Usuario</label>
+          <select class="form-select" id="inputEmployee" [(ngModel)]="currentEmployee" >
+            <option *ngFor="let employee of employees" [ngValue]="employee">{{employee.name}}</option>
+          </select>
+        </div>
+        <div class="float-end" >
+          <a href="assign" class="btn btn-success mb-3 mb-lg-0" (click)="$event.preventDefault(); onUserAssign();" ><i class='bx bxs-plus-square'></i>Asignar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6 col-xl-6">
+    <div class="card">
+      <div class="card-header">
+        <h5>Cajeros asignados</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive mt-4">
+          <table class="table align-middle mb-0 table-hover" id="DrawerAssignTable">
+            <thead class="table-light">
+              <tr>
+                <th>Nombre</th>
+                <th>Contacto</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of drawerAssign">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="">
+                      <img src="{{ data.user.image_url }}" class="rounded-circle" width="32" height="32" alt="" />
+                    </div>
+                    <div class="ms-2">
+                      <div>{{ data.user.name }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ data.user.prefix }}&nbsp;{{ data.user.phone}}</td>
+                <td>{{ data.user.role.name }}</td>
+                <td>
+                  <div class="list-inline d-flex order-actions">
+                    <a href="#" (click)="$event.preventDefault(); onRowSelected(data)" class="text-danger list-inline-item" data-bs-toggle="modal" data-bs-target="#modalConfirmDelete"><i class='bx bxs-trash'></i></a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Confirm Delete-->
+<div #modalConfirmDelete class="modal fade" id="modalConfirmDelete" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Confirmar eliminación</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <strong>¿Está seguro de que quiere eliminar el registro <span class="text-primary">{{ deleteEmployee?.name }}</span>?</strong>
+        </p>
+        <p>Toda la información asociada a este perfíl será eliminada permanentemente. <span class="text-danger">Esta operación no puede revertirse.</span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" ngbAutofocus class="btn btn-danger" (click)="$event.preventDefault(); removeRowItem();" data-bs-target="#modalConfirmDelete" data-bs-toggle="modal" data-bs-dismiss="modal">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
